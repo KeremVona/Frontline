@@ -2,11 +2,13 @@ import { Router } from "express";
 import pool from "../db.js";
 import bcrypt from "bcrypt";
 import jwtGenerator from "../utils/jwtGenerator.js";
+import validInfo from "../middleware/validInfo.js";
+import authorization from "../middleware/authorization.js";
 const router = Router();
 
 // Register
 
-router.post("/register", async (req, res) => {
+router.post("/register", validInfo, async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
@@ -35,7 +37,7 @@ router.post("/register", async (req, res) => {
     }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", validInfo, async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -61,6 +63,16 @@ router.post("/login", async (req, res) => {
     catch (err) {
         console.error(err.message);
         res.status(500).send("Server error, check console in editor");
+    }
+});
+
+router.get("/is-verify", authorization, async (req, res) => {
+    try {
+        res.json(true);
+    }
+    catch (err) {
+        console.error(err.message);
+        return res.status(500).send("Server error, check console in editor");
     }
 });
 

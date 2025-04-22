@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import pool from './db.js';
 import jwtAuth from "./routes/jwtAuth.js";
+import dashboard from "./routes/dashboard.js";
 const app = express();
 
 app.use(express.json());
@@ -12,6 +13,10 @@ app.use(cors());
 // Register and Login Routes
 
 app.use("/auth", jwtAuth);
+
+// Dashboard Route
+
+app.use("/dashboard", dashboard);
 
 app.listen(5000, () => {
     console.log("Server has started on port 5000");
