@@ -31,7 +31,7 @@ export default function Login({ setAuth }) {
       setAuth(true);
     }
     catch (err) {
-      console.err(err.message);
+      console.error(err.message);
     }
   }
   return (

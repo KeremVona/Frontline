@@ -39,6 +39,7 @@ router.post("/register", validInfo, async (req, res) => {
 });
 
 router.post("/login", validInfo, async (req, res) => {
+    console.log("login")
     try {
         const { email, password } = req.body;
 
@@ -47,17 +48,23 @@ router.post("/login", validInfo, async (req, res) => {
             [email]
         );
 
+        console.log(`tryın içi ve user: ${user.email}`)
+        console.log(`tryın içi ve email: ${email} pass: ${password}`)
+
         if (user.rows.length === 0) {
+            console.log("if")
             res.status(401).json("Password or email is incorrect");
         }
 
         const validPassword = await bcrypt.compare(password, user.rows[0].password_hash);
 
         if (!validPassword) {
+            console.log("valid")
             return res.status(401).json("Password or email is incorrect");
         }
 
         const token = jwtGenerator(user.rows[0].id);
+        console.log("buraya geldik mi")
 
         res.json({ token });
     }
@@ -68,6 +75,7 @@ router.post("/login", validInfo, async (req, res) => {
 });
 
 router.get("/is-verify", authorization, async (req, res) => {
+    console.log("is verify")
     try {
         res.json(true);
     }
@@ -76,5 +84,14 @@ router.get("/is-verify", authorization, async (req, res) => {
         return res.status(500).send("Server error, check console in editor");
     }
 });
+
+router.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.status(500).send('Failed to log out');
+      }
+      res.redirect('/login');
+    });
+  });
 
 export default router;
