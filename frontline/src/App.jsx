@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import { useEffect } from 'react';
 import { parse } from 'dotenv';
+import HostGame from './pages/HostGame';
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
 
   useEffect(() => {
     isAuth();
-  })
+  }, [])
   
   return (
     <>
@@ -45,6 +46,7 @@ function App() {
             <Route path="/login" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Login setAuth={setAuth} />} />
             <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register setAuth={setAuth} />} />
             <Route path="/dashboard" element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/login" />} />
+            <Route path="/host-game" element={isAuthenticated ? <HostGame /> : <Navigate to="/login" />} />
           </Routes>
         </div>
       </Router>
