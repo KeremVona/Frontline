@@ -12,7 +12,7 @@ import HostGame from './pages/HostGame';
 
 function App() {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   const setAuth = boolean => {
     setIsAuthenticated(boolean);
@@ -27,16 +27,21 @@ function App() {
 
       const parseRes = await response.json();
       
-      parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
+      setIsAuthenticated(parseRes === true);
     }
     catch (err) {
       console.error(err.message);
+      setIsAuthenticated(false);
     }
   }
 
   useEffect(() => {
     isAuth();
   }, [])
+
+  if (isAuthenticated === null) {
+    return <div style={{ textAlign: "center", marginTop: "2rem" }}>🔄 Checking authentication...</div>;
+  }
   
   return (
     <>
