@@ -42,40 +42,61 @@ export default function Dashboard({ setAuth }) {
     <>
       <Navbar />
       <div className="grid grid-cols-2 gap-20">
-        <div id="column-1" className="ml-10 mt-5">
+        <div id="column-1" className="ml-10 mt-5 bg-gray-800">
           <Header name={name} />
-          {/*<button className='bg-amber-100' onClick={e => logout(e)}>Logout</button>*/}
+          <button className='bg-amber-100' onClick={e => logout(e)}>Logout</button>
 
           <ul className="grid grid-cols-2 mt-20 gap-5">
-            <li className="">
-              <Link to="" className="">
-                <p className="text-2xl bg-amber-200 p-2.5">Host Game</p>
+            <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
+              <Link to="/host-game" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+                Host Game
               </Link>
             </li>
-            <li>
-              <Link to="" className="">
-                <p className="text-2xl bg-amber-200 p-2.5">Game List</p>
+            <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
+              <Link to="" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+                Game List
               </Link>
             </li>
-            <li>
-              <p className="text-2xl bg-amber-200 p-2.5">Friends</p>
+            <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
+              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Friends</p>
             </li>
-            <li>
-              <p className="text-2xl bg-amber-200 p-2.5">Clan</p>
+            <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
+              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Clan</p>
             </li>
           </ul>
         </div>
-        <div id="column-2" className="mr-10 mt-5">
+        <div id="column-2" className="mr-10 mt-5 bg-gray-800">
           <h2 className="text-4xl p-4 mb-20" id="dashboard">
             Dashboard
           </h2>
+
           <div className="grid grid-cols-2 gap-2">
-            <div className="grid grid-rows-5 gap-5" id="stats">
-              <p className="text-2xl">Number of games played</p>
-              <p className="text-2xl">Wins</p>
-              <p className="text-2xl">Losses</p>
-              <p className="text-2xl">Draws</p>
-              <p className="text-2xl">Most played</p>
+            <div className="" id="stats">
+              <div className="stats stats-vertical shadow">
+                <div className="stat">
+                  <div className="stat-title">Games played</div>
+                  <div className="stat-value">10</div>
+                </div>
+
+                <div className="stat">
+                  <div className="stat-title">Wins</div>
+                  <div className="stat-value">5</div>
+                </div>
+
+                <div className="stat">
+                  <div className="stat-title">Losses</div>
+                  <div className="stat-value">5</div>
+                </div>
+                <div className="stat">
+                  <div className="stat-title">Draws</div>
+                  <div className="stat-value">0</div>
+                </div>
+
+                <div className="stat">
+                  <div className="stat-title">Most Played</div>
+                  <div className="stat-value">Text</div>
+                </div>
+              </div>
             </div>
             <div className="" id="news">
               <h2 className="text-3xl">News</h2>
