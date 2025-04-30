@@ -6,6 +6,9 @@ export default function Navbar() {
     
         <ul className='flex flex-row bg-amber-100 justify-center gap-2'>
             <li className='basis-sm bg-amber-200 justify-center items-center flex p-2.5'>
+                <Link to="/dashboard" className='text-center text-2xl'>Dashboard</Link>
+            </li>
+            <li className='basis-sm bg-amber-200 justify-center items-center flex p-2.5'>
                 <Link to="/host-game" className='text-center text-2xl'>Game Host</Link>
             </li>
             <li className='basis-sm bg-amber-200 justify-center items-center flex'>

@@ -4,7 +4,7 @@ import authenticateUser from '../middleware/authorization.js'; // Your auth midd
 
 const router = express.Router();
 
-router.post('/api/games', authenticateUser, async (req, res) => {
+router.post('/games', authenticateUser, async (req, res) => {
   const { title, description, gameTime, maxPlayers, generalRules, countryRules } = req.body;
   const userId = req.user.id;
 
@@ -44,6 +44,32 @@ router.post('/api/games', authenticateUser, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Failed to create game.' });
+  }
+});
+
+router.get('/games/:id', authenticateUser, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const gameRes = await db.query('SELECT * FROM games WHERE id = $1', [id]);
+    const game = gameRes.rows[0];
+
+    if (!game) return res.status(404).json({ error: 'Game not found' });
+
+    const rulesRes = await db.query('SELECT * FROM game_rules WHERE game_id = $1', [id]);
+
+    const generalRules = rulesRes.rows
+      .filter(r => r.rule_type === 'general')
+      .map(r => r.description);
+
+    const countryRules = rulesRes.rows
+      .filter(r => r.rule_type === 'country_specific')
+      .map(r => ({ country: r.country, description: r.description }));
+
+    res.json({ ...game, generalRules, countryRules });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load game' });
   }
 });
 

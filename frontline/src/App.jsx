@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import { useEffect } from 'react';
 import { parse } from 'dotenv';
 import HostGame from './pages/HostGame';
+import GameDetails from './pages/GameDetails';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
             <Route path="/register" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Register setAuth={setAuth} />} />
             <Route path="/dashboard" element={isAuthenticated ? <Dashboard setAuth={setAuth} /> : <Navigate to="/login" />} />
             <Route path="/host-game" element={isAuthenticated ? <HostGame /> : <Navigate to="/login" />} />
+            <Route path="/games/:id" element={<GameDetails />} />
           </Routes>
         </div>
       </Router>
