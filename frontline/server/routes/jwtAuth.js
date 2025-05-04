@@ -48,23 +48,23 @@ router.post("/login", validInfo, async (req, res) => {
             [email]
         );
 
-        console.log(`tryın içi ve user: ${user.email}`)
-        console.log(`tryın içi ve email: ${email} pass: ${password}`)
+        console.log(`user: ${user.rows[0]}`)
+        console.log(`email: ${email} pass: ${password}`) // shown
 
         if (user.rows.length === 0) {
-            console.log("if")
-            res.status(401).json("Password or email is incorrect");
+            console.log("user.rows.length")
+            return res.status(401).json("Password or email is incorrect");
         }
-
+        console.log("58")
         const validPassword = await bcrypt.compare(password, user.rows[0].password_hash);
-
+        console.log("59")
         if (!validPassword) {
             console.log("valid")
             return res.status(401).json("Password or email is incorrect");
         }
-
+        console.log(`user.rows[0].id: ${user.rows[0].id}`)
         const token = jwtGenerator(user.rows[0].id);
-        console.log("buraya geldik mi")
+        console.log(`token in login: ${token}`)
 
         res.json({ token });
     }

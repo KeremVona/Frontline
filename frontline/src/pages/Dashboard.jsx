@@ -11,14 +11,22 @@ export default function Dashboard({ setAuth }) {
   const [name, setName] = useState("");
 
   async function getName() {
+    const token = localStorage.getItem("token");
     try {
-      const respone = await fetch("http://localhost:5000/dashboard", {
+      const response = await fetch("http://localhost:5000/dashboard", {
         method: "GET",
-        headers: { token: localStorage.token },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
-      const parseRes = await respone.json();
-      setName(parseRes.username);
+      if (response.ok) {
+        const parsedResponse = await response.json();
+        setName(parsedResponse.username); // Make sure you're receiving the data correctly
+      } else {
+        console.error("Server responded with error:", response.status);
+      }
     } catch (err) {
       console.error(err.message);
     }
@@ -44,24 +52,36 @@ export default function Dashboard({ setAuth }) {
       <div className="grid grid-cols-2 gap-20">
         <div id="column-1" className="ml-10 mt-5 bg-gray-800">
           <Header name={name} />
-          <button className='bg-amber-100' onClick={e => logout(e)}>Logout</button>
+          <button className="bg-amber-100" onClick={(e) => logout(e)}>
+            Logout
+          </button>
 
           <ul className="grid grid-cols-2 mt-20 gap-5">
             <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
-              <Link to="/host-game" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+              <Link
+                to="/host-game"
+                className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+              >
                 Host Game
               </Link>
             </li>
             <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
-              <Link to="" className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+              <Link
+                to="/games"
+                className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+              >
                 Game List
               </Link>
             </li>
             <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
-              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Friends</p>
+              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+                Friends
+              </p>
             </li>
             <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
-              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">Clan</p>
+              <p className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl">
+                Clan
+              </p>
             </li>
           </ul>
         </div>

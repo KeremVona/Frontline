@@ -73,4 +73,21 @@ router.get('/games/:id', authenticateUser, async (req, res) => {
   }
 });
 
+// GET /api/games
+router.get('/games', authenticateUser, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT g.*, u.username AS host_name
+      FROM games g
+      JOIN users u ON g.host_user_id = u.id
+      ORDER BY g.game_time DESC
+    `);
+
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to load games' });
+  }
+});
+
 export default router;

@@ -53,7 +53,7 @@ export default function Navbar() {
       </li>
       <li className="basis-sm bg-amber-200 justify-center items-center flex">
         <Link
-          to=""
+          to="/games"
           className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
         >
           <svg

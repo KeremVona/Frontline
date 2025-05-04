@@ -25,10 +25,15 @@ export default function Login({ setAuth }) {
 
       const parseRes = await response.json();
 
-      localStorage.setItem("token", parseRes.token);
-
-      setAuth(true);
+      if (response.ok && parseRes.token) {
+        localStorage.setItem("token", parseRes.token);
+        setAuth(true);
+      } else {
+        console.log("Login failed:", parseRes);
+        setAuth(false);
+      }
     } catch (err) {
+      console.log("login error");
       console.error(err.message);
     }
   };

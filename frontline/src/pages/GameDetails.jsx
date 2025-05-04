@@ -37,7 +37,7 @@ const GameDetails = () => {
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-2xl mx-auto bg-white shadow-md rounded-xl">
+      <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl">
         <h1 className="text-2xl font-bold mb-2">{game.title}</h1>
         <p className="mb-1">
           <strong>Description:</strong> {game.description}
