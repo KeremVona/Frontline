@@ -4,17 +4,26 @@ import Navbar from "../components/Navbar";
 
 const GameList = () => {
   const [games, setGames] = useState([]);
+  const [isoDate, setIsoDate] = useState(null);
+  const [time1, setTime1] = useState(null);
 
   useEffect(() => {
     const fetchGames = async () => {
+      const token = localStorage.getItem("token");
       try {
         const res = await fetch("http://localhost:5000/api/games", {
           method: "GET",
-          headers: { token: localStorage.token },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await res.json();
-        console.log(`Respone status: ${res}`);
-        console.log(`Fetched games: ${data}`);
+
+        // console.log(`data: ${data}`);
+
+        // console.log(`Respone status: ${res}`);
+        // console.log(`Fetched games: ${data}`);
         setGames(data);
       } catch (err) {
         console.error("Error fetching games:", err);
@@ -42,7 +51,16 @@ const GameList = () => {
               <p className="mt-1 text-sm">
                 Host: <span className="font-medium">{game.host_name}</span>
               </p>
-              <p className="text-sm">Time: {game.game_time}</p>
+              <p className="text-sm">
+                Time:{" "}
+                {new Date(game.game_time).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
               <p className="text-sm">Max Players: {game.max_players}</p>
             </Link>
           ))}

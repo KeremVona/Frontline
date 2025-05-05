@@ -10,9 +10,9 @@ function jwtGenerator(id) {
     user: id, // This should match the `id` in the user table
   };*/
 
-  console.log(`user:id ${payload.id}`);
+  // console.log(`user:id ${payload.id}`);
 
-  console.log(`process.env ${process.env.jwtSecret}`);
+  // console.log(`process.env ${process.env.jwtSecret}`);
 
   return jwt.sign(payload, `${process.env.jwtSecret}`, { expiresIn: "1h" });
 }

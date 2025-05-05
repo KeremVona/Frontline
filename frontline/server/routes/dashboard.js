@@ -6,8 +6,8 @@ const router = Router();
 router.get("/", authorization, async (req, res) => {
   try {
     const userId = req.user;
-    console.log("User ID from token:", req.user);
-    console.log("User ID: ", userId)
+    // console.log("User ID from token:", req.user);
+    // console.log("User ID: ", userId)
     const user = await pool.query("SELECT username FROM users WHERE id = $1", [
       userId,
     ]);

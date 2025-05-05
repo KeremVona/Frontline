@@ -25,7 +25,7 @@ function App() {
   };
 
   async function isAuth() {
-    console.log("is auth");
+    // console.log("is auth");
     const token = localStorage.getItem("token");
     if (token) {
       try {
@@ -39,7 +39,7 @@ function App() {
 
         const parseRes = await response.json();
 
-        console.log(`parseRes: ${parseRes}`);
+        // console.log(`parseRes: ${parseRes}`);
 
         setIsAuthenticated(parseRes === true);
       } catch (err) {

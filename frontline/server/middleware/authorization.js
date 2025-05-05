@@ -7,10 +7,10 @@ export default async (req, res, next) => {
   // console.log("Request Headers:", req.headers);
   try {
     const authHeader = req.header("Authorization");
-    console.log(`authHeader: ${authHeader}`);
+    // console.log(`authHeader: ${authHeader}`);
 
     if (!authHeader) {
-      console.log("!authHeader");
+      console.log("autHeader might be null, authorization");
       return res.status(403).json({ error: "Authorization error" });
     }
 
@@ -20,12 +20,12 @@ export default async (req, res, next) => {
       return res.status(403).json({ error: "Authorization error" });
     }
 
-    console.log(`token: ${token}`);
+    // console.log(`token: ${token}`);
 
     const payload = jwt.verify(token, `${process.env.jwtSecret}`);
 
     req.user = payload.id;
-    console.log(`authorization.js req.user: ${req.user}`);
+    // console.log(`authorization.js req.user: ${req.user}`);
     next();
   } catch (err) {
     console.error(err.message);

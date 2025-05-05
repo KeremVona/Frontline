@@ -50,7 +50,7 @@ export default function Dashboard({ setAuth }) {
     <>
       <Navbar />
       <div className="grid grid-cols-2 gap-20">
-        <div id="column-1" className="ml-10 mt-5 bg-gray-800">
+        <div id="column-1" className="ml-10 mt-5 bg-[#313244]">
           <Header name={name} />
           <button className="bg-amber-100" onClick={(e) => logout(e)}>
             Logout
@@ -85,7 +85,7 @@ export default function Dashboard({ setAuth }) {
             </li>
           </ul>
         </div>
-        <div id="column-2" className="mr-10 mt-5 bg-gray-800">
+        <div id="column-2" className="mr-10 mt-5 bg-[#313244]">
           <h2 className="text-4xl p-4 mb-20" id="dashboard">
             Dashboard
           </h2>

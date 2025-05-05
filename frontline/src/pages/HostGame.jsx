@@ -47,12 +47,13 @@ export default function HostGame() {
       countryRules,
     };
 
+    const token = localStorage.getItem("token");
     // http://localhost:5000/dashboard
     const response = await fetch("/api/games", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        token: localStorage.token,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(gameData),
     });

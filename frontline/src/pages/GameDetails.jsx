@@ -7,19 +7,38 @@ const GameDetails = () => {
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isoDate, setIsoDate] = useState(null);
+  const [time1, setTime1] = useState(null);
 
   useEffect(() => {
     const fetchGameDetails = async () => {
+      const token = localStorage.getItem("token");
       try {
         const response = await fetch(`/api/games/${id}`, {
           headers: {
-            token: localStorage.token,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         });
 
         if (!response.ok) throw new Error("Failed to fetch game.");
 
         const data = await response.json();
+
+        const isoDate = data.game_time;
+        setIsoDate(data.game_time);
+        const date1 = new Date(isoDate);
+
+        const time1 = date1.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+        });
+        setTime1(time1);
+
+        // console.log(`data: ${data.game_time}`);
         setGame(data);
         setLoading(false);
       } catch (err) {
@@ -43,7 +62,7 @@ const GameDetails = () => {
           <strong>Description:</strong> {game.description}
         </p>
         <p className="mb-1">
-          <strong>Time:</strong> {game.game_time}
+          <strong>Time:</strong> {time1}
         </p>
         <p className="mb-4">
           <strong>Max Players:</strong> {game.max_players}

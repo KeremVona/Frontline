@@ -6,7 +6,8 @@ const router = express.Router();
 
 router.post('/games', authenticateUser, async (req, res) => {
   const { title, description, gameTime, maxPlayers, generalRules, countryRules } = req.body;
-  const userId = req.user.id;
+  const userId = req.user;
+  // console.log(`userId: ${userId}`)
 
   try {
     const gameResult = await db.query(
