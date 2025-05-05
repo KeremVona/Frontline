@@ -2,14 +2,19 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
+  let theURL = window.location.href;
+  let dashboard = theURL.includes("/dashboard") ? true : false;
+  let gameHost = theURL.includes("/host-game") ? true : false;
+  let games = theURL.includes("/games") ? true : false;
+  let profile = theURL.includes("/profile") ? true : false;
   return (
     <ul className="flex flex-row  justify-center gap-2 bg-[#1e1e2f] text-[#f1f1f1] border-b border-[#2d7d46]">
-      <li className="basis-sm bg-amber-200 justify-center items-center flex p-2.5">
+      <li className={`${dashboard ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         {/*<Link to="/dashboard" className='text-center text-2xl text-black'>Dashboard</Link>*/}
 
         <Link
           to="/dashboard"
-          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,10 +34,10 @@ export default function Navbar() {
         </Link>
         {/* bg-[#2d7d46] text-white hover:bg-[#3ba55d] rounded px-4 py-2 */}
       </li>
-      <li className="basis-sm bg-amber-200 justify-center items-center flex p-2.5">
+      <li className={`${gameHost ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         <Link
           to="/host-game"
-          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -51,10 +56,10 @@ export default function Navbar() {
           Game Host
         </Link>
       </li>
-      <li className="basis-sm bg-amber-200 justify-center items-center flex">
+      <li className={`${games ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         <Link
           to="/games"
-          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -73,10 +78,10 @@ export default function Navbar() {
           Game List
         </Link>
       </li>
-      <li className="basis-sm bg-amber-200 justify-center items-center flex">
+      <li className={`${profile ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         <Link
           to=""
-          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl"
+          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
         >
           <div className="avatar">
             <div className="w-10 rounded-full">

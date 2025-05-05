@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:5000");
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -9,6 +12,8 @@ const GameDetails = () => {
   const [error, setError] = useState(null);
   const [isoDate, setIsoDate] = useState(null);
   const [time1, setTime1] = useState(null);
+  const [playerCount, setPlayerCount] = useState(0);
+  const [hasJoined, setHasJoined] = useState(false);
 
   useEffect(() => {
     const fetchGameDetails = async () => {
@@ -48,6 +53,26 @@ const GameDetails = () => {
     };
 
     fetchGameDetails();
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    // Join the game room
+    socket.emit("joinGame", { gameId: id });
+
+    // Listen for updates
+    socket.on("playerCountUpdate", ({ gameId: updatedId, count }) => {
+      if (updatedId === id) {
+        setPlayerCount(count);
+      }
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.emit("leaveGame", { gameId: id });
+      socket.off("playerCountUpdate");
+    };
   }, [id]);
 
   if (loading) return <p className="p-4">Loading game...</p>;
@@ -91,6 +116,36 @@ const GameDetails = () => {
             ))
           )}
         </ul>
+        <div className="mt-4">
+          <p className="text-lg font-medium">
+            Current Players:{" "}
+            <span className="text-yellow-300">{playerCount}</span>
+          </p>
+
+          <div className="mt-2 space-x-4">
+            {!hasJoined ? (
+              <button
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                onClick={() => {
+                  socket.emit("joinGame", { gameId: id });
+                  setHasJoined(true);
+                }}
+              >
+                Join Game
+              </button>
+            ) : (
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                onClick={() => {
+                  socket.emit("leaveGame", { gameId: id });
+                  setHasJoined(false);
+                }}
+              >
+                Leave Game
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

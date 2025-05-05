@@ -5,10 +5,13 @@ import jwtAuth from "./routes/jwtAuth.js";
 import dashboard from "./routes/dashboard.js";
 import gameRoutes from "./routes/gamesRouter.js";
 import cron from "node-cron";
+import http from "http";
+import { setupSocket } from "./socket.js";
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+const server = http.createServer(app);
 
 // Routes
 
@@ -37,6 +40,9 @@ cron.schedule("0 * * * *", async () => {
 });
 */
 
-app.listen(5000, () => {
+// Setup WebSocket
+setupSocket(server);
+
+server.listen(5000, () => {
   console.log("Server has started on port 5000");
 });
