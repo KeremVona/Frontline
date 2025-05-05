@@ -6,7 +6,7 @@ import io from "socket.io-client";
 const socket = io("http://localhost:5000");
 
 const GameDetails = () => {
-  const { id } = useParams();
+  const { id: gameId } = useParams();
   const [game, setGame] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,12 +14,38 @@ const GameDetails = () => {
   const [time1, setTime1] = useState(null);
   const [playerCount, setPlayerCount] = useState(0);
   const [hasJoined, setHasJoined] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  // Fetch user info (or adjust if you get userId another way)
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const response = await fetch("http://localhost:5000/dashboard", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Unauthorized");
+
+        const data = await response.json();
+        setUserId(data.user_id);
+      } catch (err) {
+        console.error("Failed to fetch user:", err.message);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchGameDetails = async () => {
       const token = localStorage.getItem("token");
       try {
-        const response = await fetch(`/api/games/${id}`, {
+        const response = await fetch(`/api/games/${gameId}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -53,27 +79,38 @@ const GameDetails = () => {
     };
 
     fetchGameDetails();
-  }, [id]);
+  }, [gameId]);
 
+  // Player count update
   useEffect(() => {
-    if (!id) return;
+    if (!gameId || !userId) return;
 
-    // Join the game room
-    socket.emit("joinGame", { gameId: id });
-
-    // Listen for updates
-    socket.on("playerCountUpdate", ({ gameId: updatedId, count }) => {
-      if (updatedId === id) {
+    const handlePlayerCountUpdate = ({ gameId: updatedId, count }) => {
+      console.log("Player count update received:", updatedId, count);
+      if (updatedId === gameId) {
         setPlayerCount(count);
       }
-    });
-
-    // Cleanup on component unmount
-    return () => {
-      socket.emit("leaveGame", { gameId: id });
-      socket.off("playerCountUpdate");
     };
-  }, [id]);
+
+    socket.on("playerCountUpdate", handlePlayerCountUpdate);
+
+    return () => {
+      socket.off("playerCountUpdate", handlePlayerCountUpdate);
+    };
+  }, [gameId, userId]);
+
+  // Handle join/leave actions
+  const handleJoin = () => {
+    if (!hasJoined) {
+      socket.emit("joinGame", { gameId, userId });
+      setHasJoined(true);
+    }
+  };
+
+  const handleLeave = () => {
+    socket.emit("leaveGame", { gameId, userId });
+    setHasJoined(false);
+  };
 
   if (loading) return <p className="p-4">Loading game...</p>;
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
@@ -123,27 +160,22 @@ const GameDetails = () => {
           </p>
 
           <div className="mt-2 space-x-4">
-            {!hasJoined ? (
-              <button
-                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-                onClick={() => {
-                  socket.emit("joinGame", { gameId: id });
-                  setHasJoined(true);
-                }}
-              >
-                Join Game
-              </button>
-            ) : (
-              <button
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-                onClick={() => {
-                  socket.emit("leaveGame", { gameId: id });
-                  setHasJoined(false);
-                }}
-              >
-                Leave Game
-              </button>
-            )}
+            <button
+              disabled={hasJoined}
+              className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition ${
+                hasJoined ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handleJoin}
+            >
+              Join Game
+            </button>
+
+            <button
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+              onClick={handleLeave}
+            >
+              Leave Game
+            </button>
           </div>
         </div>
       </div>
