@@ -6,7 +6,8 @@ import dashboard from "./routes/dashboard.js";
 import gameRoutes from "./routes/gamesRouter.js";
 import cron from "node-cron";
 import http from "http";
-import { setupSocket } from "./socket.js";
+// import { setupSocket } from "./socket.js";
+// import gamePlayersRouter from "./routes/gamePlayers.js";
 const app = express();
 
 app.use(express.json());
@@ -25,6 +26,8 @@ app.use("/dashboard", dashboard);
 
 app.use("/api", gameRoutes);
 
+// app.use('/api/game-players', gamePlayersRouter);
+
 // ✅ Cron Job to delete outdated games
 /*
 cron.schedule("0 * * * *", async () => {
@@ -41,8 +44,8 @@ cron.schedule("0 * * * *", async () => {
 */
 
 // Setup WebSocket
-setupSocket(server);
+// setupSocket(server);
 
-server.listen(5000, () => {
+app.listen(5000, () => {
   console.log("Server has started on port 5000");
 });

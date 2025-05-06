@@ -1,4 +1,4 @@
-import { Server } from "socket.io";
+/*import { Server } from "socket.io";
 import pool from "./db.js"; // PostgreSQL connection
 
 export const setupSocket = (server) => {
@@ -19,6 +19,7 @@ export const setupSocket = (server) => {
           "SELECT * FROM game_players WHERE game_id = $1 AND user_id = $2",
           [gameId, userId]
         );
+        console.log(`gameId: ${gameId}, userId: ${userId}`)
 
         if (existing.rows.length === 0) {
           await pool.query(
@@ -35,11 +36,11 @@ export const setupSocket = (server) => {
           "SELECT COUNT(*) FROM game_players WHERE game_id = $1",
           [gameId]
         );
-        console.log("socket 1")
+        // console.log("socket 1")
         const playerCount = parseInt(result.rows[0].count, 10);
-        console.log("socket 2")
+        // console.log("socket 2")
         io.to(gameId).emit("playerCountUpdate", { gameId, count: playerCount });
-        console.log("socket 3")
+        // console.log("socket 3")
       } catch (error) {
         console.error("❌ Error in joinGame:", error.message);
       }
@@ -74,4 +75,4 @@ export const setupSocket = (server) => {
   });
 
   return io;
-};
+};*/

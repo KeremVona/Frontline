@@ -7,7 +7,7 @@ export default async (req, res, next) => {
   // console.log("Request Headers:", req.headers);
   try {
     const authHeader = req.header("Authorization");
-    // console.log(`authHeader: ${authHeader}`);
+    console.log(`authHeader: ${authHeader}`);
 
     if (!authHeader) {
       console.log("autHeader might be null, authorization");

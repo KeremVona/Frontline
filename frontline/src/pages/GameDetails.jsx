@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import io from "socket.io-client";
+// import io from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+// const socket = io("http://localhost:5000");
 
 const GameDetails = () => {
   const { id: gameId } = useParams();
@@ -83,7 +83,9 @@ const GameDetails = () => {
 
   // Player count update
   useEffect(() => {
+    console.log("use effect içi");
     if (!gameId || !userId) return;
+    console.log("geçtik ifi");
 
     const handlePlayerCountUpdate = ({ gameId: updatedId, count }) => {
       console.log("Player count update received:", updatedId, count);
@@ -99,17 +101,69 @@ const GameDetails = () => {
     };
   }, [gameId, userId]);
 
-  // Handle join/leave actions
-  const handleJoin = () => {
-    if (!hasJoined) {
-      socket.emit("joinGame", { gameId, userId });
-      setHasJoined(true);
+  // Fetch current player count
+  const fetchPlayerCount = async () => {
+    try {
+      const res = await fetch(`/api/games/${gameId}/playerCount`);
+      const data = await res.json();
+      if (res.ok) {
+        setPlayerCount(data.count);
+      }
+    } catch (err) {
+      console.error("Failed to fetch player count:", err);
     }
   };
 
-  const handleLeave = () => {
-    socket.emit("leaveGame", { gameId, userId });
-    setHasJoined(false);
+  useEffect(() => {
+    fetchPlayerCount();
+  }, [gameId]);
+
+  // Join game
+  const handleJoin = async () => {
+    try {
+      const res = await fetch("/api/games/join", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ gameId, userId }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setPlayerCount(data.playerCount);
+        setHasJoined(true);
+      } else {
+        console.error(data.error);
+      }
+    } catch (err) {
+      console.error("Join failed:", err);
+    }
+  };
+
+  // Leave game
+  const handleLeave = async () => {
+    try {
+      const res = await fetch("/api/games/leave", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ gameId, userId }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setPlayerCount(data.playerCount);
+        setHasJoined(false);
+      } else {
+        console.error(data.error);
+      }
+    } catch (err) {
+      console.error("Leave failed:", err);
+    }
   };
 
   if (loading) return <p className="p-4">Loading game...</p>;
@@ -161,7 +215,7 @@ const GameDetails = () => {
 
           <div className="mt-2 space-x-4">
             <button
-              disabled={hasJoined}
+              disabled={hasJoined || !userId}
               className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition ${
                 hasJoined ? "opacity-50 cursor-not-allowed" : ""
               }`}
