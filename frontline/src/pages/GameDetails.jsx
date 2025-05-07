@@ -15,6 +15,7 @@ const GameDetails = () => {
   const [playerCount, setPlayerCount] = useState(0);
   const [hasJoined, setHasJoined] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [players, setPlayers] = useState([]);
 
   // Fetch user info (or adjust if you get userId another way)
   useEffect(() => {
@@ -25,6 +26,7 @@ const GameDetails = () => {
       try {
         const response = await fetch("http://localhost:5000/dashboard", {
           headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });
@@ -32,6 +34,7 @@ const GameDetails = () => {
         if (!response.ok) throw new Error("Unauthorized");
 
         const data = await response.json();
+        console.log("Fetched dashboard data:", data);
         setUserId(data.user_id);
       } catch (err) {
         console.error("Failed to fetch user:", err.message);
@@ -82,7 +85,7 @@ const GameDetails = () => {
   }, [gameId]);
 
   // Player count update
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("use effect içi");
     if (!gameId || !userId) return;
     console.log("geçtik ifi");
@@ -99,27 +102,57 @@ const GameDetails = () => {
     return () => {
       socket.off("playerCountUpdate", handlePlayerCountUpdate);
     };
-  }, [gameId, userId]);
+  }, [gameId, userId]);*/
 
   // Fetch current player count
   const fetchPlayerCount = async () => {
     try {
-      const res = await fetch(`/api/games/${gameId}/playerCount`);
+      const res = await fetch(`/api/games/${gameId}/playerCount`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
       const data = await res.json();
       if (res.ok) {
         setPlayerCount(data.count);
+      } else {
+        console.error("Failed to fetch player count:", data.error);
       }
     } catch (err) {
       console.error("Failed to fetch player count:", err);
     }
   };
 
+  const fetchPlayers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`/api/games/${gameId}/players`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setPlayers(data.players);
+      } else {
+        console.error(data.error);
+      }
+    } catch (err) {
+      console.error("Failed to fetch players:", err);
+    }
+  };
+
   useEffect(() => {
     fetchPlayerCount();
+    fetchPlayers();
   }, [gameId]);
 
   // Join game
   const handleJoin = async () => {
+    console.log("join içi");
     try {
       const res = await fetch("/api/games/join", {
         method: "POST",
@@ -132,8 +165,10 @@ const GameDetails = () => {
 
       const data = await res.json();
       if (res.ok) {
+        console.log("resok");
         setPlayerCount(data.playerCount);
         setHasJoined(true);
+        fetchPlayers();
       } else {
         console.error(data.error);
       }
@@ -158,6 +193,7 @@ const GameDetails = () => {
       if (res.ok) {
         setPlayerCount(data.playerCount);
         setHasJoined(false);
+        fetchPlayers();
       } else {
         console.error(data.error);
       }
@@ -213,7 +249,19 @@ const GameDetails = () => {
             <span className="text-yellow-300">{playerCount}</span>
           </p>
 
+          <h3 className="mt-4 text-lg font-medium text-white">
+            Players Joined:
+          </h3>
+          <ul className="list-disc list-inside text-white">
+            {players.length === 0 ? (
+              <li>No players yet</li>
+            ) : (
+              players.map((p) => <li key={p.id}>{p.username}</li>)
+            )}
+          </ul>
+
           <div className="mt-2 space-x-4">
+            {console.log(`userId: ${userId}`)}
             <button
               disabled={hasJoined || !userId}
               className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition ${

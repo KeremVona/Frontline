@@ -13,7 +13,7 @@ router.get("/", authorization, async (req, res) => {
     ]);
     if (user.rows.length > 0) {
       // Ensure that you're returning a valid JSON object
-      res.json({ username: user.rows[0].username });
+      res.json({ user_id: userId, username: user.rows[0].username });
     } else {
       // If no user is found, send a 404 with an error message
       res.status(404).json({ error: "User not found" });

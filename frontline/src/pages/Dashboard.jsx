@@ -119,7 +119,18 @@ export default function Dashboard({ setAuth }) {
               </div>
             </div>
             <div className="" id="news">
-              <h2 className="text-3xl">News</h2>
+              <h2 className="text-3xl ml-2">News</h2>
+              <div className="card card-border bg-base-100 w-96 mt-4 ml-5">
+                <div className="card-body">
+                  <h2 className="card-title">Version 0.1 Out</h2>
+                  <p>
+                    You can host and find games! Join and Leave buttons work. Player count updates.
+                  </p>
+                  <div className="card-actions justify-end">
+                    <button className="btn btn-primary">Read now</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
