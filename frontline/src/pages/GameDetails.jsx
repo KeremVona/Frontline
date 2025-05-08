@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
-// import io from "socket.io-client";
+import io from "socket.io-client";
+import Chat from "../components/Chat";
 
-// const socket = io("http://localhost:5000");
+const socket = io.connect("http://localhost:5000");
 
 const GameDetails = () => {
   const { id: gameId } = useParams();
@@ -16,6 +17,9 @@ const GameDetails = () => {
   const [hasJoined, setHasJoined] = useState(false);
   const [userId, setUserId] = useState(null);
   const [players, setPlayers] = useState([]);
+  const [username, setUsername] = useState("");
+  const [room, setRoom] = useState("");
+  const [showChat, setShowChat] = useState(false);
 
   // Fetch user info (or adjust if you get userId another way)
   useEffect(() => {
@@ -35,6 +39,7 @@ const GameDetails = () => {
 
         const data = await response.json();
         console.log("Fetched dashboard data:", data);
+        setUsername(data.username);
         setUserId(data.user_id);
       } catch (err) {
         console.error("Failed to fetch user:", err.message);
@@ -74,6 +79,7 @@ const GameDetails = () => {
 
         // console.log(`data: ${data.game_time}`);
         setGame(data);
+        setRoom(data.id);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -83,26 +89,6 @@ const GameDetails = () => {
 
     fetchGameDetails();
   }, [gameId]);
-
-  // Player count update
-  /*useEffect(() => {
-    console.log("use effect içi");
-    if (!gameId || !userId) return;
-    console.log("geçtik ifi");
-
-    const handlePlayerCountUpdate = ({ gameId: updatedId, count }) => {
-      console.log("Player count update received:", updatedId, count);
-      if (updatedId === gameId) {
-        setPlayerCount(count);
-      }
-    };
-
-    socket.on("playerCountUpdate", handlePlayerCountUpdate);
-
-    return () => {
-      socket.off("playerCountUpdate", handlePlayerCountUpdate);
-    };
-  }, [gameId, userId]);*/
 
   // Fetch current player count
   const fetchPlayerCount = async () => {
@@ -202,6 +188,45 @@ const GameDetails = () => {
     }
   };
 
+  function hasPlayer(username) {
+    return players.some((player) => player.username === username);
+  }
+
+  const joinRoom = () => {
+    if (username !== "" && room !== "") {
+      if (hasPlayer(username)) {
+        setShowChat(true);
+      } else {
+        return (
+          <>
+          <alert></alert>
+            <div role="alert" className="alert alert-warning">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <span>Warning: Invalid email address!</span>
+            </div>
+          </>
+        );
+      }
+      socket.emit("join_room", room);
+    }
+  };
+
+  const hideChat = () => {
+    setShowChat(false);
+  };
+
   if (loading) return <p className="p-4">Loading game...</p>;
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
@@ -280,6 +305,26 @@ const GameDetails = () => {
             </button>
           </div>
         </div>
+      </div>
+      <div className="">
+        {!showChat ? (
+          <button
+            onClick={joinRoom}
+            className="btn btn-lg bg-amber-200 text-black"
+          >
+            Join chat
+          </button>
+        ) : (
+          <>
+            <Chat socket={socket} username={username} room={room} />{" "}
+            <button
+              onClick={hideChat}
+              className="btn btn-lg bg-amber-200 text-black"
+            >
+              Hide chat
+            </button>
+          </>
+        )}
       </div>
     </>
   );
