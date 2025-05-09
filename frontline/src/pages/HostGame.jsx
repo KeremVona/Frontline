@@ -16,6 +16,8 @@ export default function HostGame() {
   const [countryRuleInput, setCountryRuleInput] = useState("");
   const [countryRules, setCountryRules] = useState([]);
 
+  const [invite, setInvite] = useState("");
+
   const navigate = useNavigate();
 
   const addGeneralRule = () => {
@@ -45,6 +47,7 @@ export default function HostGame() {
       maxPlayers,
       generalRules,
       countryRules,
+      invite,
     };
 
     const token = localStorage.getItem("token");
@@ -88,6 +91,13 @@ export default function HostGame() {
             required
           />
           <input
+            type="url"
+            placeholder="Optional Discord Invite Link"
+            className="w-full p-2 border rounded"
+            value={invite}
+            onChange={(e) => setInvite(e.target.value)}
+          />
+          <input
             type="datetime-local"
             className="w-full p-2 border rounded"
             value={gameTime}
@@ -114,6 +124,9 @@ export default function HostGame() {
                 onChange={(e) => setGeneralRuleInput(e.target.value)}
                 placeholder="e.g. No paratroopers"
                 className="flex-1 p-2 border rounded"
+                onKeyDown={(event) => {
+                  event.key === "Enter" && addGeneralRule();
+                }}
               />
               <button
                 type="button"
@@ -147,6 +160,9 @@ export default function HostGame() {
                 onChange={(e) => setCountryRuleInput(e.target.value)}
                 placeholder="e.g. Can't research Weapons II"
                 className="flex-1 p-2 border rounded"
+                onKeyDown={(event) => {
+                  event.key === "Enter" && addCountryRule();
+                }}
               />
               <button
                 type="button"

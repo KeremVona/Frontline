@@ -20,6 +20,7 @@ const GameDetails = () => {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
+  const [textToCopy, setTextToCopy] = useState("");
 
   // Fetch user info (or adjust if you get userId another way)
   useEffect(() => {
@@ -76,6 +77,7 @@ const GameDetails = () => {
           minute: "numeric",
         });
         setTime1(time1);
+        setTextToCopy(data.invite);
 
         // console.log(`data: ${data.game_time}`);
         setGame(data);
@@ -199,7 +201,7 @@ const GameDetails = () => {
       } else {
         return (
           <>
-          <alert></alert>
+            <alert></alert>
             <div role="alert" className="alert alert-warning">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -227,104 +229,129 @@ const GameDetails = () => {
     setShowChat(false);
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      alert("Copied to clipboard!");
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
+
   if (loading) return <p className="p-4">Loading game...</p>;
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
   return (
     <>
       <Navbar />
-      <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl">
-        <h1 className="text-2xl font-bold mb-2">{game.title}</h1>
-        <p className="mb-1">
-          <strong>Description:</strong> {game.description}
-        </p>
-        <p className="mb-1">
-          <strong>Time:</strong> {time1}
-        </p>
-        <p className="mb-4">
-          <strong>Max Players:</strong> {game.max_players}
-        </p>
-
-        <h2 className="text-xl font-semibold mt-4 mb-2">General Rules</h2>
-        <ul className="list-disc list-inside">
-          {game.generalRules.length === 0 ? (
-            <li>No general rules</li>
-          ) : (
-            game.generalRules.map((rule, index) => <li key={index}>{rule}</li>)
-          )}
-        </ul>
-
-        <h2 className="text-xl font-semibold mt-4 mb-2">
-          Country-Specific Rules
-        </h2>
-        <ul className="list-disc list-inside">
-          {game.countryRules.length === 0 ? (
-            <li>No country-specific rules</li>
-          ) : (
-            game.countryRules.map((rule, index) => (
-              <li key={index}>
-                <strong>{rule.country}:</strong> {rule.description}
-              </li>
-            ))
-          )}
-        </ul>
-        <div className="mt-4">
-          <p className="text-lg font-medium">
-            Current Players:{" "}
-            <span className="text-yellow-300">{playerCount}</span>
+      <div className="grid grid-cols-2">
+        <div className="p-6 max-w-2xl bg-gray-500 mt-4 shadow-md rounded-xl ml-10">
+          <h1 className="text-2xl font-bold mb-2">{game.title}</h1>
+          <p className="mb-1">
+            <strong>Description:</strong> {game.description}
           </p>
+          <p className="mb-1">
+            <strong>Time:</strong> {time1}
+          </p>
+          <p className="mb-1">
+            <strong>Max Players:</strong> {game.max_players}
+          </p>
+          <p className="mb-4">
+            {game.invite != null ? `Discord: ${game.invite}` : "Discord: No ❌"}
+          </p>
+          {game.invite != null ? (
+            <button className="btn btn-sm" onClick={handleCopy}>
+              Copy link
+            </button>
+          ) : (
+            ""
+          )}
 
-          <h3 className="mt-4 text-lg font-medium text-white">
-            Players Joined:
-          </h3>
-          <ul className="list-disc list-inside text-white">
-            {players.length === 0 ? (
-              <li>No players yet</li>
+          <h2 className="text-xl font-semibold mt-4 mb-2">General Rules</h2>
+          <ul className="list-disc list-inside">
+            {game.generalRules.length === 0 ? (
+              <li>No general rules</li>
             ) : (
-              players.map((p) => <li key={p.id}>{p.username}</li>)
+              game.generalRules.map((rule, index) => (
+                <li key={index}>{rule}</li>
+              ))
             )}
           </ul>
 
-          <div className="mt-2 space-x-4">
-            {console.log(`userId: ${userId}`)}
-            <button
-              disabled={hasJoined || !userId}
-              className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition ${
-                hasJoined ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={handleJoin}
-            >
-              Join Game
-            </button>
+          <h2 className="text-xl font-semibold mt-4 mb-2">
+            Country-Specific Rules
+          </h2>
+          <ul className="list-disc list-inside">
+            {game.countryRules.length === 0 ? (
+              <li>No country-specific rules</li>
+            ) : (
+              game.countryRules.map((rule, index) => (
+                <li key={index}>
+                  <strong>{rule.country}:</strong> {rule.description}
+                </li>
+              ))
+            )}
+          </ul>
+          <div className="mt-4">
+            <p className="text-lg font-medium">
+              Current Players:{" "}
+              <span className="text-yellow-300">{playerCount}</span>
+            </p>
 
-            <button
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-              onClick={handleLeave}
-            >
-              Leave Game
-            </button>
+            <h3 className="mt-4 text-lg font-medium text-white">
+              Players Joined:
+            </h3>
+            <ul className="list-disc list-inside text-white">
+              {players.length === 0 ? (
+                <li>No players yet</li>
+              ) : (
+                players.map((p) => <li key={p.id}>{p.username}</li>)
+              )}
+            </ul>
+
+            <div className="mt-2 space-x-4">
+              {console.log(`userId: ${userId}`)}
+              <button
+                disabled={hasJoined || !userId}
+                className={`px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition ${
+                  hasJoined ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                onClick={handleJoin}
+              >
+                Join Game
+              </button>
+
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                onClick={handleLeave}
+              >
+                Leave Game
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="">
-        {!showChat ? (
-          <button
-            onClick={joinRoom}
-            className="btn btn-lg bg-amber-200 text-black"
-          >
-            Join chat
-          </button>
-        ) : (
-          <>
-            <Chat socket={socket} username={username} room={room} />{" "}
-            <button
-              onClick={hideChat}
-              className="btn btn-lg bg-amber-200 text-black"
-            >
-              Hide chat
-            </button>
-          </>
-        )}
+        <div>
+          {!showChat ? (
+            <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl flex justify-center">
+              <button
+                onClick={joinRoom}
+                className="btn btn-lg bg-amber-200 text-black"
+              >
+                Join chat
+              </button>
+            </div>
+          ) : (
+            <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl">
+              <Chat socket={socket} username={username} room={room} />{" "}
+              <button
+                onClick={hideChat}
+                className="btn btn-lg bg-amber-200 text-black"
+              >
+                Hide chat
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

@@ -12,15 +12,16 @@ router.post("/games", authenticateUser, async (req, res) => {
     maxPlayers,
     generalRules,
     countryRules,
+    invite,
   } = req.body;
   const userId = req.user;
   // console.log(`userId: ${userId}`)
 
   try {
     const gameResult = await db.query(
-      `INSERT INTO games (host_user_id, title, description, game_time, max_players)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [userId, title, description, gameTime, maxPlayers]
+      `INSERT INTO games (host_user_id, title, description, game_time, max_players, invite)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [userId, title, description, gameTime, maxPlayers, invite || null]
     );
     const gameId = gameResult.rows[0].id;
 

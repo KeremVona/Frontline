@@ -9,12 +9,12 @@ export default function Navbar() {
   let profile = theURL.includes("/profile") ? true : false;
   return (
     <ul className="flex flex-row  justify-center gap-2 bg-[#1e1e2f] text-[#f1f1f1] border-b border-[#2d7d46]">
-      <li className={`${dashboard ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
+      <li className={`${dashboard ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5 shadow-md" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         {/*<Link to="/dashboard" className='text-center text-2xl text-black'>Dashboard</Link>*/}
 
         <Link
           to="/dashboard"
-          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
+          className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition shadow-md"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

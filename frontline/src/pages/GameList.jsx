@@ -62,6 +62,7 @@ const GameList = () => {
                 })}
               </p>
               <p className="text-sm">Max Players: {game.max_players}</p>
+              <p className="text-sm">Discord: {game.invite != null ? "Yes ✅" : "No ❌"}</p>
             </Link>
           ))}
         </div>
