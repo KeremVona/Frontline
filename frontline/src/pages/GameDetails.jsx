@@ -21,6 +21,8 @@ const GameDetails = () => {
   const [room, setRoom] = useState("");
   const [showChat, setShowChat] = useState(false);
   const [textToCopy, setTextToCopy] = useState("");
+  const [isHost, setIsHost] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   // Fetch user info (or adjust if you get userId another way)
   useEffect(() => {
@@ -82,6 +84,10 @@ const GameDetails = () => {
         // console.log(`data: ${data.game_time}`);
         setGame(data);
         setRoom(data.id);
+        setIsHost(data.host_user_id === userId);
+        console.log(`isHost: ${isHost}`);
+        console.log(`data.host_user_id: ${data.host_user_id}`);
+        console.log(`userId: ${userId}`);
         setLoading(false);
       } catch (err) {
         setError(err.message);
@@ -238,6 +244,50 @@ const GameDetails = () => {
     }
   };
 
+  const handleKick = async (playerId) => {
+    try {
+      const res = await fetch("/api/games/kick", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ gameId, playerId }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        fetchPlayers(); // refresh list
+        setPlayerCount((prev) => prev - 1);
+      } else {
+        console.error(data.error);
+      }
+    } catch (err) {
+      console.error("Kick failed:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (game && userId) {
+      setIsHost(game.host_user_id === userId);
+    }
+  }, [game, userId]);
+
+  const updatePlayers = () => {
+    fetchPlayers();
+    fetchPlayerCount();
+    if (!players.includes(username)) {
+      hideChat();
+    }
+  };
+
+  const handleShowToast = () => {
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000); // hide after 3 seconds
+  };
+
   if (loading) return <p className="p-4">Loading game...</p>;
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
@@ -305,7 +355,19 @@ const GameDetails = () => {
               {players.length === 0 ? (
                 <li>No players yet</li>
               ) : (
-                players.map((p) => <li key={p.id}>{p.username}</li>)
+                players.map((p) => (
+                  <li key={p.id} className="flex items-center justify-between">
+                    <span>{p.username}</span>
+                    {isHost && p.id !== userId && (
+                      <button
+                        className="ml-4 px-2 py-1 bg-red-500 text-white rounded text-sm"
+                        onClick={() => handleKick(p.id)}
+                      >
+                        Kick
+                      </button>
+                    )}
+                  </li>
+                ))
               )}
             </ul>
 
@@ -326,6 +388,21 @@ const GameDetails = () => {
                 onClick={handleLeave}
               >
                 Leave Game
+              </button>
+
+              {showToast && (
+                <div className="toast">
+                  <div className="alert alert-info">
+                    <span>Player kicked.</span>
+                  </div>
+                </div>
+              )}
+
+              <button
+                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+                onClick={updatePlayers}
+              >
+                Update Players
               </button>
             </div>
           </div>

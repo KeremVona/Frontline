@@ -205,4 +205,46 @@ router.get("/games/:id/players", authenticateUser, async (req, res) => {
   }
 });
 
+// Kick player from a game (host only)
+router.post("/games/kick", authenticateUser, async (req, res) => {
+  const { gameId, playerId } = req.body;
+  const hostId = req.user; // from JWT
+  // console.log(`hostId: ${hostId}`)
+
+  try {
+    // Verify that requester is the host
+    const game = await db.query(
+      "SELECT host_user_id FROM games WHERE id = $1",
+      [gameId]
+    );
+
+    if (game.rows.length === 0) {
+      return res.status(404).json({ error: "Game not found." });
+    }
+
+    if (game.rows[0].host_user_id !== hostId) {
+      return res.status(403).json({ error: "Only the host can kick players." });
+    }
+
+    // Remove player from game_players table
+    await db.query(
+      "DELETE FROM game_players WHERE game_id = $1 AND user_id = $2",
+      [gameId, playerId]
+    );
+
+    // Optionally: Get updated player count
+    const countRes = await db.query(
+      "SELECT COUNT(*) FROM game_players WHERE game_id = $1",
+      [gameId]
+    );
+
+    const playerCount = parseInt(countRes.rows[0].count, 10);
+
+    res.json({ message: "Player kicked.", playerCount });
+  } catch (err) {
+    console.error("Kick error:", err);
+    res.status(500).json({ error: "Server error." });
+  }
+});
+
 export default router;

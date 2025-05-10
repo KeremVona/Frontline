@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 
 export default function Profile({ setAuth }) {
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   async function getName() {
     const token = localStorage.getItem("token");
@@ -30,6 +32,33 @@ export default function Profile({ setAuth }) {
   useEffect(() => {
     getName();
   }, []);
+
+  /*
+  async function getInformation() {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:5000/auth/get-information", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ email, password }), // Send them here
+      });
+
+      if (response.ok) {
+        const parsedResponse = await response.json();
+        console.log(parsedResponse);
+        setEmail(parsedResponse.email);
+      } else {
+        console.error("Server responded with error:", response.status);
+      }
+    } catch (err) {
+      console.error(err.message);
+    }
+  }
+  getInformation();
+  */
 
   const logout = async (e) => {
     e.preventDefault();

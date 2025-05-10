@@ -31,6 +31,7 @@ export default function Chat({ socket, username, room }) {
       setMessageList((list) => [...list, data]);
     });
   }, [socket]);
+
   return (
     <>
       <div className="p-6 max-w-2xl mx-auto bg-gray-600 mt-4 shadow-md rounded-xl">
@@ -56,7 +57,10 @@ export default function Chat({ socket, username, room }) {
           </fieldset>
         </div>
       </div>
-      <ScrollToBottom className="message-container" followButtonClassName="follow-button">
+      <ScrollToBottom
+        className="message-container"
+        followButtonClassName="follow-button"
+      >
         {messageList.map((messageContent) => {
           return (
             <div className="p-6 max-w-2xl mx-auto bg-gray-600 mt-4 shadow-md rounded-xl">
@@ -69,10 +73,7 @@ export default function Chat({ socket, username, room }) {
               >
                 <div className="chat-image avatar">
                   <div className="w-10 rounded-full">
-                    <img
-                      alt="Tailwind CSS chat bubble component"
-                      src=""
-                    />
+                    <img alt="Tailwind CSS chat bubble component" src="" />
                   </div>
                 </div>
                 <div className="chat-header">
@@ -82,7 +83,9 @@ export default function Chat({ socket, username, room }) {
                   </time>
                 </div>
                 <div className="chat-bubble">{messageContent.message}</div>
-                <div className="chat-footer opacity-50">{username === messageContent.sender ? "Delivered" : ""}</div>
+                <div className="chat-footer opacity-50">
+                  {username === messageContent.sender ? "Delivered" : ""}
+                </div>
               </div>
             </div>
           );
