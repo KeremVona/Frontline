@@ -80,7 +80,7 @@ export default function Navbar() {
       </li>
       <li className={`${profile ? "basis-sm bg-[#2d7d46] justify-center items-center flex p-2.5" : "basis-sm bg-amber-200 justify-center items-center flex p-2.5"}`}>
         <Link
-          to=""
+          to="/profile"
           className="btn btn-xs sm:btn-sm md:btn-md lg:btn-lg xl:btn-xl hover:bg-[#2d7d46] transition"
         >
           <div className="avatar">

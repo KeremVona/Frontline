@@ -16,6 +16,7 @@ import { parse } from "dotenv";
 import HostGame from "./pages/HostGame";
 import GameDetails from "./pages/GameDetails";
 import GameList from "./pages/GameList";
+import Profile from "./pages/Profile";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -110,6 +111,12 @@ function App() {
               path="/games"
               element={
                 isAuthenticated ? <GameList /> : <Navigate to="/login" />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                isAuthenticated ? <Profile setAuth={setAuth} /> : <Navigate to="/login" />
               }
             />
           </Routes>

@@ -8,7 +8,7 @@ export default function Chat({ socket, username, room }) {
   const [messageList, setMessageList] = useState([]);
 
   const sendMessage = async () => {
-    if (currentMessage !== "") {
+    if (currentMessage !== "" && currentMessage.trim() !== "") {
       const messageData = {
         room: room,
         sender: username,
@@ -33,7 +33,7 @@ export default function Chat({ socket, username, room }) {
   }, [socket]);
   return (
     <>
-      <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl">
+      <div className="p-6 max-w-2xl mx-auto bg-gray-600 mt-4 shadow-md rounded-xl">
         <div>
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
             <legend className="fieldset-legend">Chat</legend>
@@ -59,7 +59,7 @@ export default function Chat({ socket, username, room }) {
       <ScrollToBottom className="message-container" followButtonClassName="follow-button">
         {messageList.map((messageContent) => {
           return (
-            <div className="p-6 max-w-2xl mx-auto bg-gray-500 mt-4 shadow-md rounded-xl">
+            <div className="p-6 max-w-2xl mx-auto bg-gray-600 mt-4 shadow-md rounded-xl">
               <div
                 className={
                   username === messageContent.sender
@@ -71,7 +71,7 @@ export default function Chat({ socket, username, room }) {
                   <div className="w-10 rounded-full">
                     <img
                       alt="Tailwind CSS chat bubble component"
-                      src="https://img.daisyui.com/images/profile/demo/kenobee@192.webp"
+                      src=""
                     />
                   </div>
                 </div>
@@ -82,7 +82,7 @@ export default function Chat({ socket, username, room }) {
                   </time>
                 </div>
                 <div className="chat-bubble">{messageContent.message}</div>
-                <div className="chat-footer opacity-50">Delivered</div>
+                <div className="chat-footer opacity-50">{username === messageContent.sender ? "Delivered" : ""}</div>
               </div>
             </div>
           );

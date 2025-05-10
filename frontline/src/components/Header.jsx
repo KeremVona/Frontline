@@ -14,7 +14,7 @@ export default function Header({ name }) {
   let text = `Happy ${dayOfWeek}`;
 
   return (
-    <h1 className="text-4xl p-4 font-semibold text-[#ffcc00] shadow-md" id="header">
+    <h1 className="text-4xl p-4 font-semibold text-[#ffcc00] shadow-md rounded-xl bg-gray-600 mt-4" id="header">
       {text}, {name}
     </h1>
   );

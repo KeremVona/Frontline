@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 #column-1 {
-    border-style: solid;
-    border-width: 1px;
+    /*border-style: solid;
+    border-width: 1px;*/
     height: 80vh;
 }
 
-#column-2 {
+/*#column-2 {
     border-style: solid;
     border-width: 1px;
 }
@@ -31,4 +31,4 @@
 #news {
     border-style: solid;
     border-width: 1px;
-}
+}*/

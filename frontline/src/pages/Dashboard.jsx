@@ -50,12 +50,8 @@ export default function Dashboard({ setAuth }) {
     <>
       <Navbar />
       <div className="grid grid-cols-2 gap-20">
-        <div id="column-1" className="ml-10 mt-5 bg-[#313244]">
+        <div id="column-1" className="ml-10 mt-5 bg-gray-500 mt-4 shadow-md rounded-xl px-2">
           <Header name={name} />
-          <button className="bg-amber-100" onClick={(e) => logout(e)}>
-            Logout
-          </button>
-
           <ul className="grid grid-cols-2 mt-20 gap-5">
             <li className="text-2xl bg-amber-200 p-2.5 flex justify-center">
               <Link
@@ -85,13 +81,13 @@ export default function Dashboard({ setAuth }) {
             </li>
           </ul>
         </div>
-        <div id="column-2" className="mr-10 mt-5 bg-[#313244]">
-          <h2 className="text-4xl p-4 mb-20" id="dashboard">
+        <div id="column-2" className="mr-10 mt-5 bg-[#313244] bg-gray-500 mt-4 shadow-md rounded-xl px-2">
+          <h2 className="text-4xl p-4 mb-20 bg-gray-600 mt-4 shadow-md rounded-xl" id="dashboard">
             Dashboard
           </h2>
 
           <div className="grid grid-cols-2 gap-2">
-            <div className="" id="stats">
+            <div className="bg-gray-700 shadow-md rounded-xl" id="stats">
               <div className="stats stats-vertical shadow">
                 <div className="stat">
                   <div className="stat-title">Games played</div>
@@ -118,8 +114,8 @@ export default function Dashboard({ setAuth }) {
                 </div>
               </div>
             </div>
-            <div className="" id="news">
-              <h2 className="text-3xl ml-2">News</h2>
+            <div className="bg-gray-700 shadow-md rounded-xl" id="news">
+              <h2 className="text-3xl ml-2  px-2 mt-4">News</h2>
               <div className="card card-border bg-base-100 w-96 mt-4 ml-5">
                 <div className="card-body">
                   <h2 className="card-title">Version 0.1 Out</h2>
