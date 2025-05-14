@@ -5,7 +5,7 @@ Welcome to the **Hearts of Iron IV Multiplayer Game Finder** — a web platform 
 ## 🌍 Features
 
 - 🕹️ **Game Listing** – View upcoming Hearts Of Iron 4 multiplayer games
-- 🧑‍🤝‍🧑 **Join Games** – Click to join a listed game (login required)
+- 🧑‍🤝‍🧑 **Join Games** – Click to join a listed game
 - 🎮 **Host Games** – Hosts can make a game lobby with details and rules
 - 👥 **Player Count & List** – List of players joined
 - 🔒 **User Authentication** – Register, login.
