@@ -1,4 +1,4 @@
-# HOI4 Multiplayer Game Finder
+# Hearts Of Iron 4 Multiplayer Game Finder
 
 Welcome to the **Hearts of Iron IV Multiplayer Game Finder** — a web platform that allows HOI4 players to list, host, and join multiplayer games. Whether you're planning a historical roleplay campaign or a quick competitive match, this site makes it easy to find players.
 
