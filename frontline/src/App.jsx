@@ -116,7 +116,11 @@ function App() {
             <Route
               path="/profile"
               element={
-                isAuthenticated ? <Profile setAuth={setAuth} /> : <Navigate to="/login" />
+                isAuthenticated ? (
+                  <Profile setAuth={setAuth} />
+                ) : (
+                  <Navigate to="/login" />
+                )
               }
             />
           </Routes>
